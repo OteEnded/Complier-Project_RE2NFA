@@ -242,7 +242,7 @@ class Operation:
         if re == None: re = self.RE
         else: self.setRE(re)
         
-        last_NFA = None
+        self.last_NFA = None
         
         processing_list = self.resolveParentheses(self.RE)
         processing_list = self.resolveByOrder(processing_list)
