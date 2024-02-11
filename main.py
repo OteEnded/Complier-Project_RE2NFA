@@ -1,24 +1,18 @@
-# class NFA:
-    
-#     def __init__(self, states: list, alphabet: list, transitions: dict, start_state: int, accept_states: list):
-#         self.states = states
-#         self.alphabet = alphabet
-#         self.transitions = transitions
-#         self.start_state = start_state
-#         self.accept_states = accept_states
-    
-    
-def union(operand1, operand2):
-    
-    
-    
-    print("nfa")
-
+import NFA
 
 def main():
     
-    string = input()
-    
-    o1 = union("a", "b")
-    
+    # Example usage:
+    nfa = NFA.NFA_object(
+        [1, 2, 3, 4],
+        {'a', 'b'},
+        {1: {'a': [2]}, 2: {'b': [3]}, 3: {'a': [4], 'b': [4]}, 4: {'': [3]}},
+        1,
+        [4]
+    )
+
+    # Print the graph
+    nfa.printOut()
+        
 main()
+exit(0)
