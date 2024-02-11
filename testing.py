@@ -17,10 +17,10 @@ import RE2NFA
 # # b_star.reportOut()
 # RE2NFA.Operator.concatenate(a_star, "b").reportOut()
 
-converter = RE2NFA.Operation()
+# converter = RE2NFA.Operation()
 
 # print(converter.process('abba*b'))
 
-converter.process('(a|b)*abb').reportOut()
+# converter.process('aba*ba* (ba) b').reportOut()
 
-
+# RE2NFA.Operator.union("a","b").drawOut()

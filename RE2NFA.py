@@ -23,7 +23,7 @@ class Operator:
         # check if operand is an string or an NFA_object
         if (not isinstance(operand, NFA_object)) and (type(operand) != str): raise Exception("NFA[star]: operand should be a string or an NFA_object")
         
-        if ((not isinstance(operand, NFA_object)) and (type(operand) == str)): # if operand is a string
+        if (type(operand) == str): # if operand is a string
             # then turn it into an NFA_object
             operand = Operator.symbolToNFA(operand, previous_NFA)
         
@@ -55,13 +55,13 @@ class Operator:
         if ((not isinstance(operand1, NFA_object)) and (type(operand1) != str) or (not isinstance(operand2, NFA_object)) and (type(operand2) != str)):
             raise Exception("NFA[union]: operands should be strings or NFA_objects")
         
-        if ((not isinstance(operand1, NFA_object)) and (type(operand1) == str)): # if operand1 is a string
+        if (type(operand1) == str): # if operand1 is a string
             # then turn it into an NFA_object
-            operand1 = Operator.symbolToNFA(operand1, [operand2, previous_NFA][((not isinstance(operand2, NFA_object)) and (type(operand2) == str))])
+            operand1 = Operator.symbolToNFA(operand1, [operand2, previous_NFA][(type(operand2) == str)])
         
-        if ((not isinstance(operand2, NFA_object)) and (type(operand2) == str)): # if operand2 is a string
+        if (type(operand2) == str): # if operand2 is a string
             # then turn it into an NFA_object
-            operand2 = Operator.symbolToNFA(operand2, [operand1, previous_NFA][((not isinstance(operand1, NFA_object)) and (type(operand1) == str))])
+            operand2 = Operator.symbolToNFA(operand2, [operand1, previous_NFA][(type(operand1) == str)])
             
         # 'concatenate' the operands that are NFA_objects
         old_start_state1 = operand1.start_state
@@ -93,13 +93,13 @@ class Operator:
         if ((not isinstance(operand1, NFA_object)) and (type(operand1) != str) or (not isinstance(operand2, NFA_object)) and (type(operand2) != str)):
             raise Exception("NFA[union]: operands should be strings or NFA_objects")
         
-        if ((not isinstance(operand1, NFA_object)) and (type(operand1) == str)): # if operand1 is a string
+        if (type(operand1) == str): # if operand1 is a string
             # then turn it into an NFA_object
-            operand1 = Operator.symbolToNFA(operand1, [operand2, previous_NFA][((not isinstance(operand2, NFA_object)) and (type(operand2) == str))])
+            operand1 = Operator.symbolToNFA(operand1, [operand2, previous_NFA][(type(operand2) == str)])
         
-        if ((not isinstance(operand2, NFA_object)) and (type(operand2) == str)): # if operand2 is a string
+        if (type(operand2) == str): # if operand2 is a string
             # then turn it into an NFA_object
-            operand2 = Operator.symbolToNFA(operand2, [operand1, previous_NFA][((not isinstance(operand1, NFA_object)) and (type(operand1) == str))])
+            operand2 = Operator.symbolToNFA(operand2, [operand1, previous_NFA][(type(operand1) == str)])
             
         # 'union' the operands that are NFA_objects
         old_start_state1 = operand1.start_state
@@ -226,7 +226,6 @@ class Operation:
                 break
         if (inner_parentheses_open == -1) and (inner_parentheses_close == -1): return processing_list
         inner_parentheses_content = processing_list[inner_parentheses_open + 1:inner_parentheses_close]
-        print(inner_parentheses_content)
         if len(inner_parentheses_content) == 0: raise Exception("RE2NFA[findInnerParenthesesContent]: inner_parentheses_content is empty near ->\n" + "".join(processing_list) + "\ninner_parentheses_open at index: " + str(inner_parentheses_open) + "\ninner_parentheses_close at index: " + str(inner_parentheses_close))
         if len(inner_parentheses_content) == 1: 
             processing_list.pop(inner_parentheses_close)
@@ -236,7 +235,6 @@ class Operation:
         resolved_inner_parentheses_content = [self.resolveByOrder(inner_parentheses_content)]
         print("RE2NFA[Operation][resolveParentheses]: found a parenthese to resolve->", resolved_inner_parentheses_content)
         return self.resolveParentheses(processing_list[:inner_parentheses_open + 1] + resolved_inner_parentheses_content + processing_list[inner_parentheses_close:])
-        
 
     def process(self, re: str = None):
         if re == None: re = self.RE
