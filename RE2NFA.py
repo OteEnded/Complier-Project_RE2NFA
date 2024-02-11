@@ -71,20 +71,36 @@ class Operator:
         if len(operand2.accept_states) > 1: raise Exception("NFA[concatenate]: NFA from RE should have only one accept state but operand2 has more than one ->\n" + str(operand2.getData()))
         old_accept_states1 = operand1.accept_states[0]
         old_accept_states2 = operand2.accept_states[0]
-        
+
+        concat_state = max(operand2.accept_states) + 1
         new_start_state = old_start_state1
         new_accept_state = old_accept_states2
+
+        print(">>>" ,old_accept_states1, old_start_state2)
         
         new_NFA = NFA_object(
-            states=operand1.states + operand2.states,
+            states=operand1.states + operand2.states + [concat_state],
             alphabet=operand1.alphabet + operand2.alphabet,
             transitions={**operand1.transitions, **operand2.transitions},
             start_state=new_start_state,
             accept_states=[new_accept_state]
         )
         
-        new_NFA.addTransition(old_accept_states1, '', old_start_state2)
-        
+        for i in operand1.states:
+            for j in operand1.alphabet + ['']:
+                if i not in operand1.transitions.keys():
+                    continue
+                if j not in operand1.transitions[i].keys():
+                    continue
+                if old_accept_states1 in operand1.transitions[i][j]:
+                    new_NFA.addTransition(i, j, concat_state)
+                    new_NFA.transitions[i][j].remove(old_accept_states1)
+
+        new_NFA.states.remove(old_accept_states1)
+
+        new_NFA.transitions[concat_state] = new_NFA.transitions.pop(old_start_state2)
+        new_NFA.states.remove(old_start_state2)
+
         return new_NFA
 
     @staticmethod
