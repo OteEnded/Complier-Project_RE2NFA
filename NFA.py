@@ -1,4 +1,5 @@
 from typing import Union
+import json
 
 class NFA_object:
     
@@ -54,16 +55,30 @@ class NFA_object:
     def drawOut(self):
         from graphviz import Digraph
         dot = Digraph()
+        dot.attr(rankdir='LR')  # Set layout direction to left-to-right
+        dot.attr(rank='same')   # Keep nodes on the same rank if possible
+        dot.attr(dpi='300')      # Adjusting the dots per inch for better rendering
         for state in self.states:
             if state in self.accept_states:
-                dot.node(str(state), shape='doublecircle')
-            else:
-                dot.node(str(state))
+                dot.node(str(state), shape='doublecircle', width='0.5', color='red')
+            elif state == self.start_state:
+                dot.node(str(state), shape='circle', width='0.5', color='blue')
+            else: dot.node(str(state), width='0.5')
         for state, symbol_transitions in self.transitions.items():
             for symbol, next_states in symbol_transitions.items():
                 for next_state in next_states:
-                    if symbol == '':
-                        dot.edge(str(state), str(next_state), label='ε')
-                    else:
-                        dot.edge(str(state), str(next_state), label=symbol)
+                    if symbol == '': dot.edge(str(state), str(next_state), label='ε')
+                    else: dot.edge(str(state), str(next_state), label=symbol)
         dot.render('output/NFA.gv', view=True)
+    
+    def jsonOut(self):
+        data = self.getData()
+        with open('output/NFA.json', 'w', encoding = "utf-8") as f:
+            json.dump(data, f, indent=4)
+            f.close()
+    
+    def reportOut(self):
+        print("Data:", self.getData())
+        self.printOut()
+        self.jsonOut()
+        self.drawOut()

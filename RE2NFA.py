@@ -121,3 +121,13 @@ def union(operand1: Union[str, NFA_object], operand2: Union[str, NFA_object]):
     new_NFA.addTransition(old_accept_states2, '', new_accept_state)
     
     return new_NFA
+
+
+
+
+def process(re: str):
+    # remove all spaces from re
+    re = re.replace(' ', '')
+    # add a '.' between two symbols or a symbol and a '(' or a ')' or a '*' or a '|'
+    
+    
