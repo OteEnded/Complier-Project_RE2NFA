@@ -1,5 +1,9 @@
-import NFA
+import RE2NFA
 
-print(NFA.star('a').getData())
+# print(RE2NFA.star('a').getData())
 
-NFA.star('a').printOut()
+# RE2NFA.star('a').printOut()
+
+RE2NFA.union('a', 'b').drawOut()
+
+# RE2NFA.concatenate('a', 'b').drawOut()

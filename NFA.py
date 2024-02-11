@@ -8,7 +8,6 @@ class NFA_object:
     start_state = 0
     accept_states = []
     
-    
     def __init__(self, states: list, alphabet: list, transitions: dict, start_state: int, accept_states: list):
         self.states = states
         self.alphabet = alphabet
@@ -20,10 +19,10 @@ class NFA_object:
     def getData(self):
         data = {
             "states": self.states,
-            "alphabet": [],
-            "transitions": {},
-            "start_state": 0,
-            "accept_states": []
+            "alphabet": self.alphabet,
+            "transitions": self.transitions,
+            "start_state": self.start_state,
+            "accept_states": self.accept_states
         }
         return data
     
@@ -52,44 +51,19 @@ class NFA_object:
         print("Start State:", self.start_state)
         print("Accept States:", self.accept_states)
 
-def star(operand: Union[str, NFA_object]):
-    
-    # check if operand is an string or an NFA_object
-    if (not isinstance(operand, NFA_object)) and (type(operand) != str): raise Exception("NFA[star]: operand should be a string or an NFA_object")
-    
-    if ((not isinstance(operand, NFA_object)) and (type(operand) == str)): # if operand is a string
-        # then turn it into an NFA_object
-        operand = NFA_object(
-            states=[1, 2],
-            alphabet=[operand],
-            transitions={
-                1: {
-                    operand: [2]
-                }, 
-                2: {}
-            },
-            start_state=1,
-            accept_states=[2]
-        )
-    
-    # 'star' the operand that is an NFA_object
-    old_start_state = operand.start_state
-    # check if list of old_accept_states has more than one element
-    if len(operand.accept_states) > 1: raise Exception("NFA[star]: NFA from RE should have only one accept state")
-    old_accept_states = operand.accept_states[0]
-    
-    new_start_state = max(operand.states) + 1
-    new_accept_state = new_start_state + 1
-    
-    new_NFA = NFA_object(
-        states=operand.states + [new_start_state, new_accept_state],
-        alphabet=operand.alphabet,
-        transitions=operand.transitions,
-        start_state=new_start_state,
-        accept_states=[new_accept_state]
-    )
-    
-    new_NFA.addTransition(new_start_state, '', [old_start_state, new_accept_state])
-    new_NFA.addTransition(old_accept_states, '', [old_start_state, new_accept_state])
-    
-    return new_NFA
+    def drawOut(self):
+        from graphviz import Digraph
+        dot = Digraph()
+        for state in self.states:
+            if state in self.accept_states:
+                dot.node(str(state), shape='doublecircle')
+            else:
+                dot.node(str(state))
+        for state, symbol_transitions in self.transitions.items():
+            for symbol, next_states in symbol_transitions.items():
+                for next_state in next_states:
+                    if symbol == '':
+                        dot.edge(str(state), str(next_state), label='ε')
+                    else:
+                        dot.edge(str(state), str(next_state), label=symbol)
+        dot.render('output/NFA.gv', view=True)
