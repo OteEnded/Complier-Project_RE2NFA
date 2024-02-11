@@ -15,9 +15,11 @@ class NFA_object:
         self.transitions = transitions
         self.start_state = start_state
         self.accept_states = accept_states
+        self.fixDuplicateAlphabet()
         
         
     def getData(self):
+        self.fixDuplicateAlphabet()
         data = {
             "states": self.states,
             "alphabet": self.alphabet,
@@ -28,6 +30,7 @@ class NFA_object:
         return data
     
     def addTransition(self, state: int, symbol: str, next_state: Union[int, list]):
+        self.fixDuplicateAlphabet()
         if state not in self.states: raise Exception("NFA[addTransition]: state not in states")
         if ((symbol not in self.alphabet) and (symbol != '')): raise Exception("NFA[addTransition]: symbol not in alphabet")
         
@@ -42,6 +45,7 @@ class NFA_object:
             self.transitions[state][symbol].append(next_state)
 
     def printOut(self):
+        self.fixDuplicateAlphabet()
         print("States:", self.states)
         print("Alphabet:", self.alphabet)
         print("Transitions:")
@@ -53,6 +57,7 @@ class NFA_object:
         print("Accept States:", self.accept_states)
 
     def drawOut(self):
+        self.fixDuplicateAlphabet()
         from graphviz import Digraph
         dot = Digraph()
         dot.attr(rankdir='LR')  # Set layout direction to left-to-right
@@ -72,13 +77,19 @@ class NFA_object:
         dot.render('output/NFA.gv', view=True)
     
     def jsonOut(self):
+        self.fixDuplicateAlphabet()
         data = self.getData()
         with open('output/NFA.json', 'w', encoding = "utf-8") as f:
             json.dump(data, f, indent=4)
             f.close()
     
     def reportOut(self):
+        self.fixDuplicateAlphabet()
         print("Data:", self.getData())
         self.printOut()
         self.jsonOut()
         self.drawOut()
+        
+    def fixDuplicateAlphabet(self):
+        self.alphabet = set(self.alphabet)
+        self.alphabet = list(self.alphabet)

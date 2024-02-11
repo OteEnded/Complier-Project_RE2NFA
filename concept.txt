@@ -98,3 +98,7 @@ o3 = {
     start: 7,
     accept: [6]
 }
+
+
+
+(ab)*(b(ab))*abb
