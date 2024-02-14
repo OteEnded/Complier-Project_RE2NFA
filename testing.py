@@ -11,5 +11,5 @@ import RE2NFA
 # RE2NFA.star(RE2NFA.concatenate('a', 'b')).drawOut()
 
 # RE2NFA.star(RE2NFA.concatenate('a', 'b')).reportOut()
-
-RE2NFA.process('a*(a|b)*')
+converter = RE2NFA.Operation()
+converter.process('(a|b)*').drawOut()

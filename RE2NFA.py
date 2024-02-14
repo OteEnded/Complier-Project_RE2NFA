@@ -260,11 +260,20 @@ class Operation:
         
         processing_list = self.resolveParentheses(self.RE)
         processing_list = self.resolveByOrder(processing_list)
+
+        if (type(processing_list) == str and len(processing_list) == 1): 
+            processing_list = Operator.symbolToNFA(processing_list)
+        if (processing_list is None):
+            processing_list = Operator.symbolToNFA("")
         return processing_list
 
     def setRE(self, re: str):
-        # remove all spaces from re
+        # remove all spaces and . (concat symbol) from re
         re = re.replace(' ', '')
         re = re.replace('.', '')
         # turn re into a list, so we can iterate over it and store NFA_objects
         self.RE = list(re)
+
+
+def getConverter(re: str = None) -> Operation:
+    return Operation(re)
